@@ -1,0 +1,54 @@
+---
+- name: Provision Windows Server w/ dynamic ip
+  hosts: all
+  gather_facts: yes
+
+  vars:
+    vra_catalogItem: "Windows Server V2"
+    vm_domain: "tu.temple.edu"
+
+  tasks:
+    - name: BlueCat Stuff
+      block:
+        - name: Get auth token for Bluecat
+          ansible.builtin.include_role:
+            name: ans_bluecat_ipam_role
+            tasks_from: auth_get_token.yml
+          vars:
+            bamhost: "{{ bam_host }}"
+            api_user: "{{ bam_username }}"
+            api_password: "{{ bam_userpass }}"
+
+        - name: Get IP from Bluecat
+          ansible.builtin.include_role:
+            name: ans_bluecat_ipam_role
+            tasks_from: ip_assign.yml
+          vars:
+            bamhost: "{{ bam_host }}"
+            new_hostname: "{{ input_vmname }}"
+            dns_zone: "{{ vm_domain }}"
+            network_cidr: "{{ input_subnet }}"
+
+    - name: Aria Stuff
+      block:
+        - name: Include role task for aria auth
+          ansible.builtin.include_role:
+            name: ans_vmware_aria_role
+            tasks_from: "auth/auth_getToken.yml"
+
+        - name: Include role task for aria catalog item info
+          ansible.builtin.include_role:
+            name: ans_vmware_aria_role
+            tasks_from: "catalog/catalogItem_getInfo.yml"
+          vars:
+            catalog_item: "{{ vra_catalogItem }}"
+
+        - name: Include role task for aria catalog item request
+          ansible.builtin.include_role:
+            name: ans_vmware_aria_role
+            tasks_from: "catalog/catalogItem_request.yml"
+          vars:
+            vmname: "{{ input_vmname }}"
+            os_image: "{{ input_os_image}}"
+            hardware_config: "{{ input_hardware_config }}"
+            address: "{{ availableipinfo.json.data[0].address }}"

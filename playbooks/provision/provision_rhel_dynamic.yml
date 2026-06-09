@@ -1,0 +1,69 @@
+---
+- name: Provision RHEL Server w/ dynamic ip
+  hosts: all
+  gather_facts: yes
+
+  tasks:
+    - name: BlueCat Stuff
+      block:
+        - name: Get auth token for Bluecat
+          ansible.builtin.include_role:
+            name: ans_bluecat_ipam_role
+            tasks_from: auth_get_token.yml
+          vars:
+            bamhost: "{{ bam_host }}"
+            api_user: "{{ bam_username }}"
+            api_password: "{{ bam_userpass }}"
+
+        - name: Get IP from Bluecat
+          ansible.builtin.include_role:
+            name: ans_bluecat_ipam_role
+            tasks_from: ip_assign.yml
+          vars:
+            bamhost: "{{ bam_host }}"
+            new_hostname: "{{ server_fqdn | split('.') | first }}"
+            dns_zone: "{{ server_fqdn | split('.', 1) | last }}"
+            network_cidr: "{{ subnet }}"
+
+
+    - name: vCenter Stuff
+      block:
+        - name: Include role to get dvportgroup id
+          ansible.builtin.include_role:
+            name: ans_vmware_vcenter_role
+            tasks_from: "dvportgroup/get_id.yml"
+          vars:
+            dvportgroup_name: "{{ subnet }}"
+            vcenter_datacenter: "Main Campus"
+
+        - name: Set compute_network variable
+          set_fact:
+            compute_network: "{{ dvportgroup_id }}"
+            cacheable: yes
+          when: dvportgroup_id is defined
+
+        - name: print compute network
+          debug:
+            msg: "compute_network: {{ dvportgroup_id }}"
+
+    - name: Satellite Stuff
+      block:
+        - name: Include role to create host
+          ansible.builtin.include_role:
+            name: ans_redhat_satellite_role
+            tasks_from: "host/host_create_ansible01.yml"
+          vars:
+            input_username: "{{ satellite_username }}"
+            input_userpass: "{{ satellite_userpass }}"
+            input_url: "{{ satellite_url }}"
+            input_rootpw: "{{ root_password }}"
+            input_subnet: "{{ subnet }}"
+            input_fqdn: "{{ server_fqdn }}"
+            input_os: "{{ os }}"
+            input_cpu: "{{ cpu }}"
+            input_mem: "{{ memory }}"
+            input_disk_app: "{{ disk_app }}"
+            input_lifecycleenv: "{{ lifecycle_env }}"
+            input_ip: "{{ availableipinfo.json.data[0].address }}"
+            input_foapal: "{{ foapal }}"
+            compute_network: "{{ dvportgroup_id }}"

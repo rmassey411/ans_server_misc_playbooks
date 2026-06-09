@@ -1,0 +1,32 @@
+---
+- name: Provision Windows Server w/ static ip
+  hosts: all
+  gather_facts: yes
+
+  vars:
+    vra_catalogItem: "Windows Server V2"
+
+  tasks:
+    - name: Aria Stuff
+      block:
+        - name: Include role task for aria auth
+          ansible.builtin.include_role:
+            name: ans_vmware_aria_role
+            tasks_from: "auth/auth_getToken.yml"
+
+        - name: Include role task for aria catalog item info
+          ansible.builtin.include_role:
+            name: ans_vmware_aria_role
+            tasks_from: "catalog/catalogItem_getInfo.yml"
+          vars:
+            catalog_item: "{{ vra_catalogItem }}"
+
+        - name: Include role task for aria catalog item request
+          ansible.builtin.include_role:
+            name: ans_vmware_aria_role
+            tasks_from: "catalog/catalogItem_request.yml"
+          vars:
+            vmname: "{{ input_vmname }}"
+            os_image: "{{ input_os_image}}"
+            hardware_config: "{{ input_hardware_config }}"
+            address: "{{ input_address }}"

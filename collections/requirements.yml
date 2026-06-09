@@ -1,0 +1,10 @@
+---
+collections:
+- name: community.general
+- name: ansible.posix
+- name: ansible.windows
+# - name: community.windows
+- name: microsoft.ad
+- name: vmware.vmware_rest
+- name: community.vmware
+- name: redhat.satellite

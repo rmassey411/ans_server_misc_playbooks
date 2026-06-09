@@ -1,0 +1,63 @@
+---
+roles:
+# Added for bootstrap_day2
+- src: git+https://github.com/rmassey411/rapid7/ans_rapid7_user_nexpose_role.git
+  scm: git
+# Added for bootstrap_day2
+- src: git+https://github.com/rmassey411/zenoss/ans_zenoss_user_role.git
+  scm: git
+# Added for bootstrap_day2
+- src: git+https://github.com/rmassey411/zenoss/ans_zenoss_bootstrap_role.git
+  scm: git
+# Added for bootstrap_day2
+- src: git+https://github.com/rmassey411/rapid7/ans_insightvm_bootstrap_role.git
+  scm: git
+# Added for bootstrap_day2, install_carbonblack
+- src: git+https://github.com/rmassey411/vmware-carbon-black/ans_carbonblack_bootstrap_role.git
+  scm: git
+# Added for bootstrap_day2
+- src: git+https://github.com/rmassey411/logic-monitor/ans_logicmonitor_user_role.git
+  scm: git
+# Added for bootstrap_day3
+- src: git+https://github.com/rmassey411/bmc/ans_remedy_create_incident_role.git
+  scm: git
+# Added for patching
+- src: git+https://github.com/rmassey411/server-administration/ans_server_patching_role.git
+  scm: git
+
+
+# Added for Azure Arc tasks
+- src: git+https://github.com/rmassey411/azure/ans_azure_arc_role.git
+  scm: git
+
+# Added for Bluecat IPAM tasks
+- src: git+https://github.com/rmassey411/bluecat/ans_bluecat_ipam_role.git
+  scm: git
+
+# Added for Microsoft Active Directory tasks
+- src: git+https://github.com/rmassey411/microsoft-active-directory/ans_microsoft_ad_role.git
+  scm: git
+
+# Added for Satellite tasks
+- src: git+https://github.com/rmassey411/redhat-satellite/ans_redhat_satellite_role.git
+  scm: git
+
+# Added for VMware Aria tasks
+- src: git+https://github.com/rmassey411/vmware/ans_vmware_aria_role.git
+  scm: git
+
+# Added for VMware Horizon tasks
+- src: git+https://github.com/rmassey411/vmware/ans_vmware_horizon_role.git
+  scm: git
+
+# Added for VMware Log Insight tasks
+- src: git+https://github.com/rmassey411/vmware/ans_vmware_loginsight_role.git
+  scm: git
+
+# Added for VMware Operations Manager tasks
+- src: git+https://github.com/rmassey411/vmware/ans_vmware_opsmgr_role.git
+  scm: git
+
+# Added for VMware vCenter tasks
+- src: git+https://github.com/rmassey411/vmware/ans_vmware_vcenter_role.git
+  scm: git
